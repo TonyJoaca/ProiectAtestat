@@ -36,14 +36,85 @@ function checkAuth() {
         if (res.status === 401 || res.status === 403) window.location.href = '/login';
         return res.json();
     }).then(data => {
-        if (document.getElementById('userName')) {
-            document.getElementById('userName').innerText = data.username;
-            document.getElementById('userInitial').innerText = data.username.charAt(0).toUpperCase();
-            if (document.getElementById('welcomeUser')) {
-                document.getElementById('welcomeUser').innerText = data.username;
+        // Update all user info instances
+        const initialEls = document.querySelectorAll('#userInitial');
+        const nameEls = document.querySelectorAll('#userName');
+
+        nameEls.forEach(el => el.innerText = data.username);
+
+        // Handle Avatar
+        if (data.avatar_url) {
+            initialEls.forEach(el => {
+                el.innerHTML = `<img src="${data.avatar_url}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                el.style.backgroundColor = 'transparent';
+            });
+            // Update settings preview if on settings page
+            const settingsImg = document.getElementById('settingsAvatarImg');
+            const settingsInitial = document.getElementById('settingsAvatarPreview');
+            if (settingsImg && settingsInitial) {
+                settingsImg.src = data.avatar_url;
+                settingsImg.style.display = 'block';
+                settingsInitial.style.display = 'none';
             }
+        } else {
+            initialEls.forEach(el => {
+                el.innerText = data.username.charAt(0).toUpperCase();
+                el.style.backgroundColor = ''; // Reset to css default
+            });
+        }
+
+        if (document.getElementById('welcomeUser')) {
+            document.getElementById('welcomeUser').innerText = data.username;
         }
     }).catch(() => window.location.href = '/login');
+}
+
+// --- SETTINGS PAGE ---
+function previewAvatar(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const img = document.getElementById('settingsAvatarImg');
+            const initial = document.getElementById('settingsAvatarPreview');
+            img.src = e.target.result;
+            img.style.display = 'block';
+            initial.style.display = 'none';
+            document.getElementById('btnUpload').disabled = false;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+if (document.getElementById('avatarForm')) {
+    document.getElementById('avatarForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const statusDiv = document.getElementById('uploadStatus');
+
+        statusDiv.innerText = 'Se încarcă...';
+        statusDiv.style.color = '#94a3b8';
+
+        try {
+            const res = await fetch('/api/upload-avatar', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await res.json();
+
+            if (result.success) {
+                statusDiv.innerText = 'Salvată cu succes!';
+                statusDiv.style.color = 'var(--success)';
+                // Refresh auth to update sidebar immediately
+                checkAuth();
+            } else {
+                statusDiv.innerText = 'Eroare: ' + result.error;
+                statusDiv.style.color = 'var(--danger)';
+            }
+        } catch (err) {
+            console.error(err);
+            statusDiv.innerText = 'Eroare de rețea.';
+        }
+    });
 }
 
 function initLogin() {
@@ -174,12 +245,19 @@ function loadFinancialData() {
                     colors.push('#10b981'); // Green
                 }
 
+                // --- Calculate "Visual" Values for Chart ---
+                // Goal: Ensure every slice is at least ~1.5% - 2% of the visual total so it can be seen/hovered
+                const totalVal = values.reduce((a, b) => a + b, 0);
+                const minSlice = totalVal * 0.02; // 2% minimum
+
+                const displayValues = values.map(v => (v > 0 && v < minSlice) ? minSlice : v);
+
                 window.budgetChartInstance = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
                         labels: labels,
                         datasets: [{
-                            data: values,
+                            data: displayValues, // Use adjusted values for rendering
                             backgroundColor: colors,
                             borderWidth: 0,
                             hoverOffset: 4
@@ -193,7 +271,9 @@ function loadFinancialData() {
                             tooltip: {
                                 callbacks: {
                                     label: function (context) {
-                                        return ` ${context.label}: ${context.raw} RON`;
+                                        // Retrieve the REAL value using the index
+                                        const realValue = values[context.dataIndex];
+                                        return ` ${context.label}: ${realValue.toFixed(2)} RON`;
                                     }
                                 }
                             }

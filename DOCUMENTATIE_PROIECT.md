@@ -35,20 +35,22 @@ Pagina principală oferă o privire de ansamblu rapidă:
 *   **Timeline**: Lista următoarelor 3 activități planificate, ordonate cronologic.
 *   **Acțiuni Rapide**: Butoane pentru acces imediat la adăugarea de cheltuieli sau activități.
 
-### C. Modul Economic (Buget)
-*   **Setare Buget**: Utilizatorul definește suma disponibilă pentru luna curentă.
-*   **Urmărire Cheltuieli**: Adăugarea cheltuielilor zilnice cu descriere și sumă.
-*   **Statistici**:
-    *   Calcul automat al sumei rămase.
-    *   Calculul **Bugetului Zilnic Recomandat** (suma rămasă împărțită la zilele rămase din lună).
-    *   Istoricul ultimelor cheltuieli.
+### 💰 Modul Economic (Buget)
+- Setarea bugetului lunar.
+- Adăugarea cheltuielilor zilnice.
+- **Vizualizare Grafică Avansată**: Diagramă (Pie Chart) detaliată pentru distribuția bugetului pe fiecare cheltuială individuală.
+- Algoritm de vizibilitate pentru sume mici în grafic.
+- Calcul automat al bugetului zilnic recomandat.
 
-### D. Modul Management Timp (Orar)
-*   **Calendar Săptămânal**: Vizualizare tip grilă a săptămânii (Luni-Duminică).
-*   **Tipuri de Activități**:
-    1.  **Dată Fixă**: Evenimente unice (ex: "Examen Mate" pe 15 Iunie la 10:00).
-    2.  **Recurente**: Activități care se repetă săptămânal (ex: "Antrenament" în fiecare Marți la 18:00).
-*   **Sugestii Inteligente**: Un algoritm simplu care propune intervale orare libere pentru activități noi.
+### 📅 Modul Time Management (Orar)
+- Calendar săptămânal interactiv.
+- Adăugare activități fixe și recurente.
+- **Ștergere Activități**: Funcționalitate de ștergere cu confirmare direct în interfață.
+- **Sugestii Inteligente**: Un algoritm simplu care propune intervale orare libere pentru activități noi.
+
+### ⚙️ Setări și Personalizare
+- **Avatar Personalizat**: Posibilitatea de a încărca o poză de profil (JPG, PNG).
+- Pagina de setări dedicată.
 
 ## 4. Arhitectura Aplicației
 Aplicația este structurată pe modelul **Client-Server**:

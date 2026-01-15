@@ -2,16 +2,51 @@ const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const { db, createUser, verifyAndConsumeAdminKey } = require('./database');
+const multer = require('multer');
+const path = require('path');
 
 const app = express();
 const port = 3000;
+
+// --- Multer Config (File Upload) ---
+// Set storage engine
+const storage = multer.diskStorage({
+    destination: './public/uploads/avatars/',
+    filename: function (req, file, cb) {
+        // Name file: avatar-USERID-TIMESTAMP.ext
+        cb(null, 'avatar-' + req.session.userId + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+// Init upload
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5000000 }, // 5MB limit
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb);
+    }
+}).single('avatar'); // Field name 'avatar'
+
+// Check File Type
+function checkFileType(file, cb) {
+    const filetypes = /jpeg|jpg|png|gif|webp/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        cb('Error: Doar imagini!');
+    }
+}
 
 // ==========================================
 // Middleware Configuration
 // ==========================================
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // Pentru request-uri JSON
-app.use(express.static('public', { extensions: ['html'] }));
+app.use(express.static('public', { extensions: ['html'] })); // Serve static files without extension
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads'))); // Explicitly serve uploads
 
 app.use(session({
     secret: 'secret-key-atestat-proiect', // In productie, foloseste .env
@@ -30,7 +65,7 @@ function requireLogin(req, res, next) {
     if (req.session.userId) {
         next();
     } else {
-        res.redirect('/login.html');
+        res.redirect('/login');
     }
 }
 
@@ -106,11 +141,40 @@ app.post('/api/logout', (req, res) => {
     res.json({ success: true, redirect: '/login' });
 });
 
-// --- USER DATA (Protected) ---
-app.get('/api/me', requireLogin, (req, res) => {
-    res.json({
-        username: req.session.username,
-        isAdmin: req.session.isAdmin
+// --- GET CURRENT USER ---
+app.get('/api/me', (req, res) => {
+    if (!req.session.userId) return res.status(401).json({ error: "Neautorizat" });
+
+    // Also fetch avatar_url
+    db.get("SELECT username, is_admin, avatar_url FROM users WHERE id = ?", [req.session.userId], (err, row) => {
+        if (err || !row) return res.status(500).json({ error: "Eroare DB" });
+        res.json(row);
+    });
+});
+
+// --- UPLOAD AVATAR ---
+app.post('/api/upload-avatar', requireLogin, (req, res) => {
+    upload(req, res, (err) => {
+        if (err) {
+            return res.status(400).json({ error: err });
+        } else {
+            if (req.file == undefined) {
+                return res.status(400).json({ error: 'Niciun fișier selectat!' });
+            } else {
+                // File uploaded successfully, update DB
+                const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+                const userId = req.session.userId;
+
+                db.run(`UPDATE users SET avatar_url = ? WHERE id = ?`, [avatarUrl, userId], (err) => {
+                    if (err) return res.status(500).json({ error: 'Eroare salvare DB' });
+                    res.json({
+                        success: true,
+                        message: 'Avatar actualizat!',
+                        filePath: avatarUrl
+                    });
+                });
+            }
+        }
     });
 });
 

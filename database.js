@@ -22,8 +22,21 @@ function initializeDatabase() {
       email TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
       is_admin INTEGER DEFAULT 0,
+      avatar_url TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
+
+        // Migration for existing databases: Check if avatar_url exists
+        db.all("PRAGMA table_info(users)", (err, columns) => {
+            if (!err) {
+                const hasAvatar = columns.some(c => c.name === 'avatar_url');
+                if (!hasAvatar) {
+                    db.run("ALTER TABLE users ADD COLUMN avatar_url TEXT", (err) => {
+                        if (!err) console.log("Migrare: Am adăugat coloana 'avatar_url' în tabela 'users'.");
+                    });
+                }
+            }
+        });
 
         // 2. Tabel Chei Admin
         // Chei unice folosite pentru a crea conturi de admin
