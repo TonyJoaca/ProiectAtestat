@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buget - LifeOS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+    </style>
+</head>
+
+<body class="app-page">
+    <nav class="sidebar">
+        <div class="logo">
+            <div
+                style="width: 24px; height: 24px; background: linear-gradient(135deg, #6366f1, #a855f7); border-radius: 6px;">
+            </div>
+            LifeOS
+        </div>
+        <a href="/dashboard" class="nav-item">🏠 Acasă</a>
+        <a href="/budget" class="nav-item active">💰 Buget</a>
+        <a href="/schedule" class="nav-item">📅 Timp</a>
+        <a href="#" class="nav-item">⚙️ Setări</a>
+
+        <div class="user-profile">
+            <div class="avatar" id="userInitial">U</div>
+            <div>
+                <div style="font-size: 0.9rem; font-weight: 500;" id="userName">Loading...</div>
+                <button onclick="logout()"
+                    style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.8rem; padding: 0;">Deconectare</button>
+            </div>
+        </div>
+    </nav>
+    <main class="main">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+            <h2>Bugetul Tău</h2>
+            <div id="dateDisplay" style="color: #94a3b8;"></div>
+        </header>
+
+        <div class="grid" style="margin-bottom: 2rem;">
+            <div class="card">
+                <h3>Buget Rămas (Luna Asta)</h3>
+                <div class="value" id="remainingBudget">...</div>
+                <div style="font-size: 0.85rem;" id="budgetProgress">...</div>
+            </div>
+            <div class="card">
+                <h3>Buget Zilnic Recomandat</h3>
+                <div class="value" id="dailyBudget">...</div>
+                <div style="font-size: 0.85rem; color: #9ca3af;">pentru restul de <span id="daysLeft">0</span> zile
+                </div>
+            </div>
+            <div class="card">
+                <h3>Cheltuieli Astăzi</h3>
+                <div class="value" id="expensesToday">...</div>
+            </div>
+            <div class="card"
+                style="position: relative; height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h3 style="width: 100%; margin-bottom: 1rem;">Distribuție Buget</h3>
+                <div style="position: relative; height: 200px; width: 100%;">
+                    <canvas id="budgetChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions & Recent Activity -->
+        <div class="grid" style="grid-template-columns: 1fr 2fr;">
+            <div class="card">
+                <h3>Setări Rapide</h3>
+                <button onclick="openModal('budgetModal')" style="width: 100%; margin-top: 1rem;"
+                    class="btn-secondary">✏️ Setează Buget Lunar</button>
+                <button onclick="openModal('expenseModal')" style="width: 100%; margin-top: 0.75rem;"
+                    class="btn-primary">➕ Adaugă Cheltuială</button>
+            </div>
+            <div class="card">
+                <h3>Ultimele Cheltuieli</h3>
+                <ul id="expensesList" style="list-style: none; padding: 0; margin-top: 1rem;">
+                    <li style="color: #94a3b8; font-size: 0.9rem;">Se încarcă...</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Buget -->
+    <div id="budgetModal" class="modal">
+        <div class="card">
+            <h3>Setează Bugetul Lunar</h3>
+            <input type="number" id="newBudgetAmount" placeholder="Suma (RON)" style="margin: 1rem 0;">
+            <div style="display: flex; gap: 0.5rem;">
+                <button onclick="saveBudget()" class="btn-primary" style="flex: 1;">Salvează</button>
+                <button onclick="closeModal('budgetModal')" class="btn-secondary" style="flex: 1;">Anulează</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cheltuiala -->
+    <div id="expenseModal" class="modal">
+        <div class="card">
+            <h3>Adaugă Cheltuială</h3>
+            <input type="number" id="expenseAmount" placeholder="Suma (RON)" style="margin-top: 1rem;">
+            <input type="text" id="expenseDesc" placeholder="Descriere (ex: Pizza)" style="margin: 0.5rem 0;">
+            <div style="display: flex; gap: 0.5rem;">
+                <button onclick="saveExpense()" class="btn-primary" style="flex: 1;">Adaugă</button>
+                <button onclick="closeModal('expenseModal')" class="btn-secondary" style="flex: 1;">Anulează</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+
+</html>

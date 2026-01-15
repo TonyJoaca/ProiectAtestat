@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orar - LifeOS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="app-page">
+    <nav class="sidebar">
+        <div class="logo">
+            <div
+                style="width: 24px; height: 24px; background: linear-gradient(135deg, #6366f1, #a855f7); border-radius: 6px;">
+            </div>
+            LifeOS
+        </div>
+        <a href="/dashboard" class="nav-item">🏠 Acasă</a>
+        <a href="/budget" class="nav-item">💰 Buget</a>
+        <a href="/schedule" class="nav-item active">📅 Timp</a>
+        <a href="#" class="nav-item">⚙️ Setări</a>
+    </nav>
+
+    <main class="main">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2>Orarul Tău</h2>
+            <button class="btn" onclick="openModal()">+ Activitate Nouă</button>
+        </header>
+
+        <div class="calendar-grid">
+            <div class="day-column">
+                <div class="day-header">Lun</div>
+                <div id="col-1"></div>
+            </div>
+            <div class="day-column">
+                <div class="day-header">Mar</div>
+                <div id="col-2"></div>
+            </div>
+            <div class="day-column">
+                <div class="day-header">Mie</div>
+                <div id="col-3"></div>
+            </div>
+            <div class="day-column">
+                <div class="day-header">Joi</div>
+                <div id="col-4"></div>
+            </div>
+            <div class="day-column">
+                <div class="day-header">Vin</div>
+                <div id="col-5"></div>
+            </div>
+            <div class="day-column">
+                <div class="day-header">Sam</div>
+                <div id="col-6"></div>
+            </div>
+            <div class="day-column">
+                <div class="day-header">Dum</div>
+                <div id="col-0"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Add Activity -->
+    <div id="actModal" class="modal">
+        <div class="card">
+            <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Adaugă Activitate</h3>
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                <div>
+                    <label>Nume Activitate</label>
+                    <input type="text" id="actTitle" placeholder="ex: Curs Matematică">
+                </div>
+
+                <div>
+                    <label>Tip Activitate</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button id="btnFixed" onclick="setType('fixed')" style="flex: 1;">Dată Fixă</button>
+                        <button id="btnRecurring" onclick="setType('recurring')" style="flex: 1;">Recurentă</button>
+                    </div>
+                    <input type="hidden" id="actType" value="fixed">
+                </div>
+
+                <div id="inputFixed">
+                    <label>Dată și Oră</label>
+                    <input type="datetime-local" id="actDate">
+                    <div style="margin-top: 0.5rem; text-align: right;">
+                        <button onclick="getSuggestion()"
+                            style="font-size: 0.875rem; background: none; color: #a855f7; display: inline-flex; align-items: center; gap: 0.25rem;">✨
+                            Găsește un interval liber</button>
+                    </div>
+                </div>
+
+                <div id="inputRecurring" style="display: none;">
+                    <label>Ziua și Ora Săptămânală</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="recurDay">
+                            <option value="1">Luni</option>
+                            <option value="2">Marți</option>
+                            <option value="3">Miercuri</option>
+                            <option value="4">Joi</option>
+                            <option value="5">Vineri</option>
+                            <option value="6">Sâmbătă</option>
+                            <option value="0">Duminică</option>
+                        </select>
+                        <input type="time" id="recurTime">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button onclick="saveActivity()" class="btn" style="flex: 1;">Salvează</button>
+                    <button onclick="closeModal()" class="btn-secondary" style="flex: 1;">Anulează</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flatpickr CSS/JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ro.js"></script>
+
+    <script src="/app.js"></script>
+</body>
+
+</html>

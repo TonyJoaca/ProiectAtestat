@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acasă - LifeOS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="app-page">
+    <nav class="sidebar">
+        <div class="logo">
+            <div
+                style="width: 24px; height: 24px; background: linear-gradient(135deg, #6366f1, #a855f7); border-radius: 6px;">
+            </div>
+            LifeOS
+        </div>
+        <a href="/dashboard" class="nav-item active">🏠 Acasă</a>
+        <a href="/budget" class="nav-item">💰 Buget</a>
+        <a href="/schedule" class="nav-item">📅 Timp</a>
+        <a href="#" class="nav-item">⚙️ Setări</a>
+
+        <div class="user-profile">
+            <div class="avatar" id="userInitial">U</div>
+            <div>
+                <div style="font-size: 0.9rem; font-weight: 500;" id="userName">Loading...</div>
+                <button onclick="logout()"
+                    style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.8rem; padding: 0;">Deconectare</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <header>
+            <h2>Bine ai venit, <span id="welcomeUser" style="color: var(--primary);"></span>! 👋</h2>
+            <div id="dateDisplay" style="color: #94a3b8; margin-top: 0.25rem;"></div>
+        </header>
+
+        <div class="grid">
+            <!-- 1. Financial Card -->
+            <div class="card">
+                <h3>
+                    <span>💰 Situație Financiară</span>
+                    <a href="/budget.html"
+                        style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">Detalii &rarr;</a>
+                </h3>
+                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                        <div style="font-size: 0.9rem; color: #94a3b8;">Buget Rămas</div>
+                        <div class="value" id="budgetSummary">...</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.9rem; color: #94a3b8;">Recomandat Zilnic</div>
+                        <div class="value" id="dailyRec" style="font-size: 1.5rem; color: #10b981;">...</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.5rem; color: #cbd5e1;">
+                        <span id="spentLabel">Se încarcă...</span>
+                        <span id="daysLabel">Se încarcă...</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="budgetBar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Timeline Card -->
+            <div class="card">
+                <h3>
+                    <span>📅 Următoarele Activități</span>
+                    <a href="/schedule.html"
+                        style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">Orar Complet &rarr;</a>
+                </h3>
+                <div id="timelineList">
+                    <div style="padding: 1rem; text-align: center; color: #94a3b8;">Se încarcă orarul...</div>
+                </div>
+            </div>
+
+            <!-- 3. Actions -->
+            <div style="display: flex; gap: 1rem;">
+                <a href="/budget" class="btn-action btn-primary" style="flex: 1;">➕ Adaugă Cheltuială</a>
+                <a href="/schedule" class="btn-action btn-secondary" style="flex: 1;">📅 Adaugă Activitate</a>
+            </div>
+        </div>
+    </main>
+    <script src="/app.js"></script>
+</body>
+
+</html>
