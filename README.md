@@ -2,8 +2,7 @@
 
 **LifeOS** este o aplicație web de tip "Personal Assistant" care integrează gestiunea bugetului personal și planificarea timpului într-o interfață modernă și prietenoasă.
 
-![Dashboard Preview](doc/dashboard-preview.png)
-*(Notă: Încarcă o captură de ecran aici dacă dorești)*
+![Dashboard Preview](preview.png)
 
 ## 🚀 Funcționalități
 
