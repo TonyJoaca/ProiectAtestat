@@ -291,8 +291,19 @@ function loadFinancialData() {
         if (expenses.length === 0) list.innerHTML = '<li style="color: #94a3b8; font-size: 0.9rem;">Nu ai cheltuieli recente.</li>';
         expenses.forEach(ex => {
             const li = document.createElement('li');
-            li.style.cssText = 'padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between;';
-            li.innerHTML = `<span>${ex.description}</span> <span style="font-weight: 600; color: #fca5a5;">-${ex.amount} RON</span>`;
+            li.style.cssText = 'padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;';
+
+            // Format date slightly (e.g. from 2026-01-15 to 15 Jan)
+            const d = new Date(ex.date);
+            const dateLabel = d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'short' });
+
+            li.innerHTML = `
+                <div>
+                    <div style="font-weight: 500;">${ex.description}</div>
+                    <div style="font-size: 0.75rem; color: #94a3b8;">${dateLabel}</div>
+                </div>
+                <span style="font-weight: 600; color: #fca5a5;">-${ex.amount.toFixed(2)} RON</span>
+            `;
             list.appendChild(li);
         });
     });

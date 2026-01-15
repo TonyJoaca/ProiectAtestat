@@ -111,14 +111,14 @@ function registerUser(username, email, password, isAdmin, res) {
 
 // --- LOGIN ---
 app.post('/api/login', (req, res) => {
-    const { email, password } = req.body;
+    const { identifier, password } = req.body;
 
     db.get(
-        `SELECT * FROM users WHERE email = ?`,
-        [email],
+        `SELECT * FROM users WHERE email = ? OR username = ?`,
+        [identifier, identifier],
         async (err, user) => {
             if (err) return res.status(500).json({ error: "Eroare server." });
-            if (!user) return res.status(401).json({ error: "Email sau parolă incorectă." });
+            if (!user) return res.status(401).json({ error: "Utilizator/Email sau parolă incorectă." });
 
             const match = await bcrypt.compare(password, user.password_hash);
             if (match) {
@@ -268,7 +268,7 @@ app.post('/api/expenses', requireLogin, (req, res) => {
 // --- GET RECENT EXPENSES ---
 app.get('/api/expenses', requireLogin, (req, res) => {
     const userId = req.session.userId;
-    db.all(`SELECT * FROM expenses WHERE user_id = ? ORDER BY date DESC LIMIT 5`, [userId], (err, rows) => {
+    db.all(`SELECT * FROM expenses WHERE user_id = ? ORDER BY date DESC, id DESC LIMIT 5`, [userId], (err, rows) => {
         if (err) return res.status(500).json({ error: "Eroare DB" });
         res.json(rows);
     });
@@ -278,7 +278,7 @@ app.get('/api/expenses', requireLogin, (req, res) => {
 app.get('/api/expenses/month', requireLogin, (req, res) => {
     const userId = req.session.userId;
     const currentMonth = new Date().toISOString().slice(0, 7);
-    db.all(`SELECT * FROM expenses WHERE user_id = ? AND date LIKE ? ORDER BY date DESC`, [userId, `${currentMonth}%`], (err, rows) => {
+    db.all(`SELECT * FROM expenses WHERE user_id = ? AND date LIKE ? ORDER BY date DESC, id DESC`, [userId, `${currentMonth}%`], (err, rows) => {
         if (err) return res.status(500).json({ error: "Eroare DB" });
         res.json(rows);
     });
