@@ -448,11 +448,72 @@ a:hover {
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
     to {
         opacity: 1;
     }
+}
+
+/* --- Landing Page --- */
+.landing-page {
+    background-image: radial-gradient(circle at center, #4f46e5, #0f172a) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 2rem !important;
+    min-height: 100vh;
+}
+
+.landing-page h1 {
+    font-size: 3.5rem;
+    margin: 0;
+    background: linear-gradient(to right, #fff, #cbd5e1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.landing-page p {
+    font-size: 1.25rem;
+    color: #cbd5e1;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.btn-hero {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s;
+}
+
+.btn-hero:hover {
+    transform: translateY(-3px);
+}
+
+.btn-login {
+    background: white;
+    color: #4f46e5;
+}
+
+.btn-signup {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.btn-signup:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
