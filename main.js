@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const { db, createUser, verifyAndConsumeAdminKey } = require('./database');
 const multer = require('multer');
 const path = require('path');
+const { exec } = require('child_process');
 
 const app = express();
 const port = 3000;
@@ -412,5 +413,10 @@ app.get('/api/next-activity', requireLogin, (req, res) => {
 // Server Start
 // ==========================================
 app.listen(port, () => {
-    console.log(`Serverul rulează la adresa http://localhost:${port}`);
+    const url = `http://localhost:${port}`;
+    console.log(`Serverul rulează la adresa ${url}`);
+
+    // Deschide browserul automat în funcție de sistemul de operare
+    const start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
+    exec(`${start} ${url}`);
 });
